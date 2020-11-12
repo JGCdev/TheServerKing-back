@@ -10,7 +10,7 @@ const {OAuth2Client} = require('google-auth-library');
 
 
 // Download your OAuth2 configuration from the Google
-const keys = require('../oauth2.keys.json');
+const keys = require('../config/oauth2.keys.json');
 const oAuth2Client = new OAuth2Client(
     keys.web.client_id,
     keys.web.client_secret,

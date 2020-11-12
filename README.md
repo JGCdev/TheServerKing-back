@@ -1,15 +1,20 @@
-# Node Token Based Authentication REST API - Users CRUD
+# Node Token Based Authentication REST API with MongoDB support
 
-Node Token-based Authentication REST API - CRUD API using JSON web token.
+API used in combination with Angular 10 frontend and MongoDB database.
 
 
-## Authentication REST APIs
-* GET (users list)	  **/api**
-* POST (sign-in)	      **/api/signin**
-* POST (sign-up)	      **/api/register-user**
-* GET (user profile)	  **/api/user-profile/id**
-* PUT (update user)	  **/api/update-user/id**
-* DELETE (delete user)  **/api/delete-user/id**
+## Install
+-Create config folder with db.js file and oauth2.keys.json
+
+db.js
+--------------------
+module.exports = {
+    db: 'mongodb://server:port/collection'
+}
+--------------------
+
+oauth2.keys.json 
+Google Developers Oauth2 Credentials
 
 
 ## Start Node Server
@@ -17,4 +22,3 @@ Node Token-based Authentication REST API - CRUD API using JSON web token.
 - Run `npm install` to install required packages 
 - Run `npm start` to run server
 
-Open API URL on [http://localhost:4000/api](http://localhost:4000/api)

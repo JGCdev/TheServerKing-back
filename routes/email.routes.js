@@ -18,10 +18,10 @@ router.post('/send', function(req, res){
     });
     // Definimos el email
     var mailOptions = {
-        from: 'Remitente',
+        from: process.env.MAILUSER,
         to: 'jegico93@gmail.com',
-        subject: 'Asunto',
-        text: 'Contenido del email'
+        subject: 'Asunto mail custom',
+        text: 'Contenido del email personalizado.'
     };
     // Enviamos el email
     transporter.sendMail(mailOptions, function(error, info){
@@ -29,7 +29,7 @@ router.post('/send', function(req, res){
             console.log(error);
             res.send(500, err.message);
         } else {
-            console.log("Email sent");
+            console.log("Email enviado");
             res.status(200).jsonp(req.body);
         }
     });

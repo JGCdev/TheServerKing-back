@@ -2,10 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+
+const dotenv = require('dotenv');
+dotenv.config();
+
 const dbConfig = require('./config/db');
 
 // Express APIs
 const api = require('./routes/auth.routes');
+const mail = require('./routes/email.routes');
 
 // MongoDB conection
 mongoose.Promise = global.Promise;
@@ -32,9 +37,10 @@ app.use(bodyParser.urlencoded({
 app.use(cors());
 
 // Serve static resources
-app.use('/public', express.static('public'));
+// app.use('/public', express.static('public'));
 
 app.use('/api/theserverking/auth', api)
+app.use('/api/theserverking/mail', mail)
 
 // Define PORT
 const port = process.env.PORT || 4000;

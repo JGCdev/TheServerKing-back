@@ -6,14 +6,12 @@ API used in combination with Angular 10 frontend and MongoDB database.
 ## Install
 -Create config folder with db.js file and oauth2.keys.json
 
-db.js
---------------------
+### db.js
 module.exports = {
     db: 'mongodb://server:port/collection'
 }
---------------------
 
-oauth2.keys.json 
+### oauth2.keys.json 
 Google Developers Oauth2 Credentials
 
 

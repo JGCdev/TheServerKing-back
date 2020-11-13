@@ -18,16 +18,10 @@ const oAuth2Client = new OAuth2Client(
 );
 
 router.post("/signin-google", async (req, res, next) => {
-    console.log('entra');
-    console.log(req.body.authToken);
 
     const tokenInfo = await oAuth2Client.getTokenInfo(
         req.body.authToken
     );
-    
-    // Si el token es correcto (inicio de sesión correcto), buscamos usuario
-    // Si no encontramos el usuario lo registramos con contraseña provisional
-    // TO-DO, gestionar contraseña de cuentas sociales
 
     if (tokenInfo.email) {
         userSchema.findOne({
@@ -37,7 +31,7 @@ router.post("/signin-google", async (req, res, next) => {
                 const user = new userSchema({
                     username: req.body.name,
                     email: tokenInfo.email,
-                    password: 'changeme'
+                    password: 'changeme-soci4l-l0gin'
                 });
                 user.save().then((response) => {
                     let jwtToken = jwt.sign(
@@ -72,7 +66,6 @@ router.post("/signin-google", async (req, res, next) => {
                         expiresIn: "1h"
                     }
                 );
-    
                 res.status(200).json({
                     token: jwtToken,
                     expiresIn: 3600,
@@ -127,8 +120,6 @@ router.post("/register-user",
 
 // Sign-in
 router.post("/signin", (req, res, next) => {
-    console.log('entra');
-    console.log(req.body.email);
     let getUser;
     userSchema.findOne({
         email: req.body.username
@@ -142,11 +133,17 @@ router.post("/signin", (req, res, next) => {
         getUser = user;
         return bcrypt.compare(req.body.password, user.password);
     }).then(response => {
-        console.log(response);
         if (!response) {
-            return res.status(401).json({
-                message: "Authentication failed"
-            });
+            if (getUser.password === 'changeme-soci4l-l0gin') {
+                return res.status(401).json({
+                    message: "Authentication failed",
+                    customError: 'reset'
+                });
+            } else {
+                return res.status(401).json({
+                    message: "Authentication failed"
+                });
+            }
         }
         if (getUser !== null && getUser !== undefined) {
             console.log('lotenemos');

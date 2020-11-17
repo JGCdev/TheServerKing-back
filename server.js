@@ -9,8 +9,9 @@ dotenv.config();
 const dbConfig = require('./config/db');
 
 // Express APIs
-const api = require('./routes/auth.routes');
-const mail = require('./routes/email.routes');
+const authRoutes = require('./routes/auth.routes');
+const mailRoutes = require('./routes/email.routes');
+const serverRoutes = require('./routes/server.routes');
 
 // MongoDB conection
 mongoose.Promise = global.Promise;
@@ -39,8 +40,9 @@ app.use(cors());
 // Serve static resources
 // app.use('/public', express.static('public'));
 
-app.use('/api/theserverking/auth', api)
-app.use('/api/theserverking/mail', mail)
+app.use('/api/theserverking/auth', authRoutes)
+app.use('/api/theserverking/mail', mailRoutes)
+app.use('/api/theserverking/server', serverRoutes)
 
 // Define PORT
 const port = process.env.PORT || 4000;

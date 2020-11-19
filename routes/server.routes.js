@@ -6,7 +6,58 @@ const { check, validationResult } = require('express-validator');
 
 const countries = require('../data/filters/countries.json')
 
-// Get Users
+const multer = require('multer');
+
+// File upload settings  
+const PATH = './uploads';
+
+let storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, PATH);
+  },
+  filename: (req, file, cb) => {
+    let filetype = '';
+    if(file.mimetype === 'image/gif') {
+      filetype = 'gif';
+    }
+    if(file.mimetype === 'image/png') {
+      filetype = 'png';
+    }
+    if(file.mimetype === 'image/jpeg') {
+      filetype = 'jpg';
+    }
+    cb(null, file.fieldname + '-' + Date.now() + '.' + filetype)
+  }
+});
+
+let upload = multer({
+  storage: storage
+});
+
+// POST Servers
+router.post('/list', upload.single('uploadedImage'), (req, res, next) => {
+    const file = req.file
+    console.log(JSON.parse(req.body.datas));
+    console.log('Llega formulario, tratamos foto, creamos registro y devolvemos OK');
+    
+    if (!file) {
+        const error = new Error('Please upload a file')
+        error.httpStatusCode = 400
+        return next(error)
+    }
+    res.status(200).send({
+        statusCode: 200,
+        status: 'success',
+        uploadedFile: file
+    })
+
+}, (error, req, res, next) => {
+    res.status(400).send({
+        error: error.message
+    })
+})
+
+// Get Servers
 router.route('/list').get((req, res) => {
     console.log('entra', req.query);
     console.log(countries);
@@ -14,29 +65,5 @@ router.route('/list').get((req, res) => {
     res.status(200).send({res: 'ok'})
 })
 
-// Sign-up
-router.post("/register-server",
-    [
-        check('username')
-            .not()
-            .isEmpty()
-            .isLength({ min: 3 })
-            .withMessage('Name must be atleast 3 characters long'),
-        check('email', 'Email is required')
-            .not()
-            .isEmpty(),
-        check('password', 'Password should be between 5 to 15 characters long')
-            .not()
-            .isEmpty()
-            .isLength({ min: 5, max: 15 })
-    ],
-    (req, res, next) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(422).jsonp(errors.array());
-        } else {
-            console.log('Registramos servidor');
-        }
-    });
 
 module.exports = router;

@@ -37,6 +37,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cors());
 
+app.use('/api/img',express.static(__dirname + '/uploads'));
 // Serve static resources
 // app.use('/public', express.static('public'));
 

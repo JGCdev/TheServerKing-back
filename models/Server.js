@@ -5,25 +5,63 @@ const Schema = mongoose.Schema;
 const uniqueValidator = require('mongoose-unique-validator');
 
 let serverSchema = new Schema({
-    username: {
+    game: {
         type: String
     },
-    email: {
-        type: String,
-        unique: true
-    },
-    password: {
+    servername: {
         type: String
     },
-    resetPasswordToken: {
+    description: {
         type: String
     },
-    resetPasswordExpires: {
+    creationDate: {
         type: Date
     },
+    refreshDate: {
+        type: Date
+    },
+    country: {
+        type: String
+    },
+    type: {
+        type: String
+    },
+    author: {
+        type: String
+    },
+    owner: {
+        type: String
+    },
+    ip: {
+        type: String
+    },
+    web: {
+        type: String
+    },
+    youtube: {
+        type: String
+    },
+    discord: {
+        type: String
+    },
+    imgPath: {
+        type: String
+    },
+    tags: {
+        type: Array
+    },
+    pvp: {
+        type: Boolean
+    },
+    race: {
+        type: Boolean
+    },
+    rp: {
+        type: Boolean
+    },
+
 }, {
     collection: 'servers'
 })
 
-serverSchema.plugin(uniqueValidator, { message: 'Email already in use.' });
 module.exports = mongoose.model('Server', serverSchema)

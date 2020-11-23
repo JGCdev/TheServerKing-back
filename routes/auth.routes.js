@@ -31,7 +31,7 @@ router.post("/signin-google", async (req, res, next) => {
                 const user = new userSchema({
                     username: req.body.name,
                     email: tokenInfo.email,
-                    password: 'changeme-soci4l-l0gin'
+                    password: process.env.DEFAULTPASS
                 });
                 user.save().then((response) => {
                     let jwtToken = jwt.sign(
@@ -39,7 +39,7 @@ router.post("/signin-google", async (req, res, next) => {
                             email: tokenInfo.email,
                             userId: response._id
                         }, 
-                        "longer-secret-is-better", 
+                        process.env.SECRETSALT, 
                         {
                             expiresIn: "1h"
                         }
@@ -61,7 +61,7 @@ router.post("/signin-google", async (req, res, next) => {
                         email: tokenInfo.email,
                         userId: user._id
                     }, 
-                    "longer-secret-is-better", 
+                    process.env.SECRETSALT, 
                     {
                         expiresIn: "1h"
                     }
@@ -124,7 +124,6 @@ router.post("/signin", (req, res, next) => {
     userSchema.findOne({
         email: req.body.username
     }).then(user => {
-        console.log(user);
         if (!user) {
             return res.status(401).json({
                 message: "Authentication failed"
@@ -146,14 +145,12 @@ router.post("/signin", (req, res, next) => {
             }
         }
         if (getUser !== null && getUser !== undefined) {
-            console.log('lotenemos');
-            console.log(getUser.email)
             let jwtToken = jwt.sign(
                 {
                     email: getUser.email,
                     userId: getUser._id
                 }, 
-                "longer-secret-is-better", 
+                process.env.SECRETSALT, 
                 {
                     expiresIn: "1h"
                 }

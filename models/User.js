@@ -14,7 +14,13 @@ let userSchema = new Schema({
     },
     password: {
         type: String
-    }
+    },
+    resetPasswordToken: {
+        type: String
+    },
+    resetPasswordExpires: {
+        type: Date
+    },
 }, {
     collection: 'users'
 })

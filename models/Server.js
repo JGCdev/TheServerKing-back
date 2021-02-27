@@ -49,16 +49,7 @@ let serverSchema = new Schema({
     },
     tags: {
         type: Array
-    },
-    pvp: {
-        type: Boolean
-    },
-    race: {
-        type: Boolean
-    },
-    rp: {
-        type: Boolean
-    },
+    }
 
 }, {
     collection: 'servers'

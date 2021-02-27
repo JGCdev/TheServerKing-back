@@ -36,10 +36,10 @@ let upload = multer({
 
 // POST Servers
 router.post('/list', upload.single('uploadedImage'), (req, res, next) => {
+    console.log('---- POST: Nuevo servidor ----');
     const file = req.file
     console.log(file);
     const serverData = JSON.parse(req.body.data)
-    console.log('Llega formulario, tratamos foto, creamos registro y devolvemos OK');
     
     // if (!file) {
     //     const error = new Error('Please upload a file')
@@ -53,7 +53,7 @@ router.post('/list', upload.single('uploadedImage'), (req, res, next) => {
       description:  serverData.description,
       creationDate:  new Date(),
       refreshDate:  new Date(),
-      country:  countries[serverData.country],
+      country:  serverData.country,
       type:  serverData.type,
       owner:  serverData.owner,
       ip:  serverData.ip,
@@ -61,13 +61,13 @@ router.post('/list', upload.single('uploadedImage'), (req, res, next) => {
       youtube: serverData.youtube,
       discord: serverData.discord,
       imgPath: file.filename,
-      tags: [],
-      pvp: serverData.pvp,
-      race: serverData.race,
-      rp: serverData.rp
+      tags: serverData.tags,
     });
 
+    console.log('Guardamos server: ')
+
     server.save().then((response) => {
+        console.log(response);
         res.status(201).json({
             message: "Server successfully created!",
             result: response
@@ -84,11 +84,26 @@ router.post('/list', upload.single('uploadedImage'), (req, res, next) => {
     })
 })
 
+// Get Servers By User
+router.route('/listByUser/:id').get((req, res) => {
+  console.log('---- GET: LIST BY USER ID ----');
+  console.log(req.params.id);
+  serversSchema.find(
+    {owner: req.params.id},
+    (error, response) => {
+    if (error) {
+        return next(error)
+    } else {
+        res.status(200).json(response)
+    }
+  })
+})
+
 // Get Servers
 router.route('/list').get((req, res) => {
-    console.log('entra, params', req.query);
-    console.log(countries[req.query.country]);
-    console.log('Buscamos server con params: ');
+    console.log('---- GET: LIST ----');
+    console.log('params', req.query);
+    console.log('Match con lista de paises: ', countries[req.query.country]);
     const params = fillParams(req.query);
     console.log('FP: ', params);
     serversSchema.find(
@@ -102,17 +117,42 @@ router.route('/list').get((req, res) => {
     })
 })
 
+// Get Server
+router.route('/list/:id').get((req, res) => {
+  console.log('---- GET: LIST BY ID ----');
+  serversSchema.findById(
+    req.params.id,
+    (error, response) => {
+    if (error) {
+        return next(error)
+    } else {
+        console.log(response);
+        res.status(200).json(response)
+    }
+  })
+})
+
 function fillParams(params) {
   let newParams = {
     game: params.game,
   }
-  if (params.country !== '0') {
-    newParams.country = countries[params.country];
-  }
+
   if (params.order === '0') {
     // Orden por conectados
   } else if(params.order === '1') {
     // Orden por fecha
+  }
+
+  // Rellenamos tags si existen y si es diferente a 'Todos'
+  if (params.country && params.country !== '0') {
+    newParams.country = params.country;
+  }
+
+  if (params.tags && params.tags !== '0' ) {
+    // Generamos array con tags como pide mongoDB
+    newParams.tags = {
+      $all: params.tags.split(',')
+    }
   }
 
   return newParams

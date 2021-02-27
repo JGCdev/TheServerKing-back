@@ -41,9 +41,9 @@ app.use('/api/img',express.static(__dirname + '/uploads'));
 // Serve static resources
 // app.use('/public', express.static('public'));
 
-app.use('/api/theserverking/auth', authRoutes)
-app.use('/api/theserverking/mail', mailRoutes)
-app.use('/api/theserverking/server', serverRoutes)
+app.use('/api/serversapi/auth', authRoutes)
+app.use('/api/serversapi/mail', mailRoutes)
+app.use('/api/serversapi/server', serverRoutes)
 
 // Define PORT
 const port = process.env.PORT || 4000;

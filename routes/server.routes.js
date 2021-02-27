@@ -124,7 +124,7 @@ router.route('/list/:id').get((req, res) => {
     req.params.id,
     (error, response) => {
     if (error) {
-        return next(error)
+        return error;
     } else {
         console.log(response);
         res.status(200).json(response)
